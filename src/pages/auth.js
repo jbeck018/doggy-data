@@ -1,5 +1,4 @@
 // This handles logging in/signing up for Supabase.io
-
 import { useState } from "react";
 import { supabase } from "../utils/api";
 import { Container, 
@@ -8,12 +7,15 @@ import { Container,
          Typography, 
          Link } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-
+import { makeStyles } from '@material-ui/core/styles';
+import Colors from '../app/colors';
 
 const Auth = () => {
     const [helperText, setHelperText] = useState({ error: null, text: null });
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showLogin, setShowLogin] = useState(false);
+    const styles = style();
 
     const handleLogin = async (type) => {
         const { user, error } =
@@ -54,9 +56,15 @@ const Auth = () => {
     };
 
     return (
-        <Container maxWidth="lg">
-            <Typography variant="h3" gutterBottom>
-                Login
+        <Container maxWidth="lg" className={styles.main}>
+            <Typography variant="h3">
+                {showLogin ? 'Login' : 'Sign Up'}
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+                { showLogin ? <>Need to create an account? <Link href='#' onClick={() => setShowLogin(false)}>Sign up here</Link></> : 
+                <>Already have an account? <Link href='#' onClick={() => setShowLogin(true)}>Login here.</Link></>
+                
+                }
             </Typography>
             <TextField 
                 id="email"
@@ -88,23 +96,47 @@ const Auth = () => {
                 </Alert>
             )}
             <div>
+                {showLogin ? (
+                    <Button
+                        onClick={() => handleLogin("LOGIN")}
+                        type="button"
+                        variant="contained"
+                        size="large"
+                        className={styles.button}
+                    >
+                        Sign In
+                    </Button> ) : (
                     <Button
                         type="submit"
                         onClick={() =>
                             handleLogin("REGISTER").catch(console.error)
                         }
+                        variant="contained"
+                        size="large"
+                        className={styles.button}
                     >
                         Sign Up
-                    </Button>
-                    <Button
-                        onClick={() => handleLogin("LOGIN")}
-                        type="button"
-                    >
-                        Sign In
-                    </Button>
+                    </Button>)
+                }
             </div>
         </Container>
     );
 };
 
 export default Auth;
+
+const style = makeStyles({
+    main: {
+        display: 'flex',
+        alignSelf: 'center',
+        justifySelf: 'center',
+        flexDirection: 'column',
+        width: 500,
+    },
+    button: {
+        backgroundColor: Colors.dark,
+        color: Colors.primary,
+        float: 'right',
+        heigth: '56px',
+    }
+})

@@ -1,25 +1,49 @@
-   // const handleLogout = async () => {
-    //     supabase.auth.signOut().catch(console.error);
-    // };
+import { makeStyles } from '@material-ui/core/styles';
+import logo from '../assets/logo.svg';
+import { supabase } from "../utils/api";
+import { Button } from '@material-ui/core';
+import Colors from '../app/colors';
 
-{/* <header
-className={
-    "flex justify-between items-center px-4 h-16 bg-gray-900"
+const Header = (props) => {
+    const styles = style();
+    
+    const handleLogout = async () => {
+        supabase.auth.signOut().catch(console.error);
+    };
+
+    return(
+        <header className={styles.header}>
+            <img src={logo} alt="Logo" className={styles.logo} />
+            {props.user ? (
+                <Button
+                    onClick={handleLogout}
+                    className={styles.button}
+                    variant="text"
+                >
+                    Logout
+            </Button>
+            ) : null}
+        </header>
+    );
 }
->
-<span
-    className={
-        "text-2xl sm:text-4xl text-white border-b font-sans"
+
+export default Header;
+
+const style = makeStyles({
+    header: {
+        position: 'absolute',
+        top: 0,
+        width: '100%',
+    },
+    logo: {
+        padding: 30,
+        width: '157px',
+        height: '12.05px'
+    },
+    button: {
+        color: Colors.dark,
+        height: '12.05px',
+        float: 'right',
+        padding: 30
     }
->
-    Todo List.
-</span>
-<button
-    onClick={handleLogout}
-    className={
-        "flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"
-    }
->
-    Logout
-</button>
-</header> */}
+})
