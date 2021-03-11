@@ -53,58 +53,58 @@ const BasicInfo = ({hidden, onClick, onChange, dates}) => {
                     DATE
                 </Typography>
                 <div className={styles.stacked}>
-                            <Autocomplete 
-                                id="month"
-                                options={dates.filter(item => item.days >= day)}
-                                getOptionLabel={(option) => option.month}
-                                classes={{root: styles.selectRoot, endAdornment: styles.selectLabel}}
-                                className={styles.month}
-                                onChange={(event,value) => {value?.month ? setMonth(value.month) : setMonth(null)}}
-                                renderInput={(params) => <TextField {...params} label="MONTH" variant="outlined" />}
-                            />
-                            <Autocomplete 
-                                id="day"
-                                options={days}
-                                getOptionLabel={(option) => option}
-                                classes={{root: styles.selectRoot, inputRoot: styles.selectLabel}}
-                                className={styles.select}
-                                onChange={(event, value) => setDay(value)}
-                                renderInput={(params) => <TextField {...params} label="DAY" variant="outlined" />}
-                            />
-                            <Autocomplete 
-                                id="year"
-                                options={years}
-                                getOptionLabel={(option) => option}
-                                classes={{root: styles.selectRoot, inputRoot: styles.selectLabel}}
-                                className={styles.select}
-                                onChange={(event, value) => {
-                                    setYear(value);
-                                }}
-                                renderInput={(params) => <TextField {...params} label="YEAR" variant="outlined" />}
-                            />
-                        </div>
-                    <TextField 
-                        id="weight"
-                        label="WEIGHT" 
-                        type="weight"
-                        name="weight"
-                        onChange={event => {
-                            onChange(event, event.target.value, 'weight');
-                        }}
-                        required={true}
+                    <Autocomplete 
+                        id="month"
+                        options={dates.filter(item => item.days >= day)}
+                        getOptionLabel={(option) => option.month}
+                        classes={{root: styles.selectRoot, endAdornment: styles.selectLabel}}
+                        className={styles.month}
+                        onChange={(event,value) => {value?.month ? setMonth(value.month) : setMonth(null)}}
+                        renderInput={(params) => <TextField {...params} label="MONTH" variant="outlined" />}
                     />
-            </div>
-            <Button
-                variant="contained"
-                size="large"
-                className={styles.button}
-                onClick={(event) => {
-                    onChange(event, createDate(year), 'date');
-                    onClick()
-                }}
-            >
+                    <Autocomplete 
+                        id="day"
+                        options={days}
+                        getOptionLabel={(option) => option}
+                        classes={{root: styles.selectRoot, inputRoot: styles.selectLabel}}
+                        className={styles.select}
+                        onChange={(event, value) => setDay(value)}
+                        renderInput={(params) => <TextField {...params} label="DAY" variant="outlined" />}
+                    />
+                    <Autocomplete 
+                        id="year"
+                        options={years}
+                        getOptionLabel={(option) => option}
+                        classes={{root: styles.selectRoot, inputRoot: styles.selectLabel}}
+                        className={styles.select}
+                        onChange={(event, value) => {
+                            setYear(value);
+                        }}
+                        renderInput={(params) => <TextField {...params} label="YEAR" variant="outlined" />}
+                    />
+                </div>
+                <TextField 
+                    id="weight"
+                    label="WEIGHT" 
+                    type="weight"
+                    name="weight"
+                    onChange={event => {
+                        onChange(event, event.target.value, 'weight');
+                    }}
+                    required={true}
+                />
+                <Button
+                    variant="contained"
+                    size="large"
+                    className={styles.button}
+                    onClick={(event) => {
+                        onChange(event, createDate(year), 'date');
+                        onClick()
+                    }}
+                >
                 Next
             </Button>
+            </div>
         </div>
     )
 }
@@ -113,11 +113,8 @@ export default BasicInfo;
 
 const style = makeStyles({
     container: {
-        width: '90%',
-        margin: '0 auto',
-    },
-    inputs: {
         display: 'flex',
+        flexDirection: 'column',
         height: '100%',
         width: '100%',
         alignSelf: 'center',
@@ -125,16 +122,25 @@ const style = makeStyles({
         alignContent: 'center',
         justifyContent: 'space-around',
     },
+    inputs: {
+        display: 'flex',
+        flexDirection: 'column',
+        width: 436,
+        alignSelf: 'center',
+        justifySelf: 'center',
+        alignContent: 'center',
+        justifyContent: 'space-around',
+    },
     info: {
         color: Colors.lightText,
-        paddingTop: 38,
-        paddingBottom: 38,
+        paddingBottom: 46,
         size: 35,
     },
     smallName: {
         color: Colors.lightText,
         textAlign: 'center',
         size: 16,
+        paddingBottom: 53,
         textTransform: 'uppercase',
     },
     hide: {
@@ -145,9 +151,7 @@ const style = makeStyles({
         color: Colors.primary,
         heigth: 56,
         width: 180,
-        position: 'relative',
-        bottom: 100,
-        left: '38%'
+        marginTop: 100
     },
     date:{
         paddingBottom: 19,
@@ -156,5 +160,12 @@ const style = makeStyles({
     stacked: {
         display: 'flex',
         flexDirection: 'row'
-    }
+    },
+    month: {
+        width: 151,
+    },
+    select: {
+        width: 134,
+        marginLeft: 8,
+    },
 })
