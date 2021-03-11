@@ -4,12 +4,11 @@ import { parse as uuidParse } from 'uuid';
 
 //supabase call to get Dogs Array from DB
 export const fetchDogs = createAsyncThunk( 'getDogs', async (user) => {
-    console.log(user.id)
     let { data: dogs, error } = await supabase
         .from('dogs')
         .select('*')
         .is('user', uuidParse(user.id));
-    console.log(`Dogs: ${dogs}`);
+    // console.log(`Dogs: ${dogs}`);
     if (error) console.log("error", error);
     else return dogs ? dogs : [];
 });

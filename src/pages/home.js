@@ -15,7 +15,6 @@ const Home = ({ user }) => {
     const styles=style();
     const dispatch = useDispatch()
     const dogs = useSelector(dogsArray)
-    console.log(dogs)
 
     useEffect(() => {
         dispatch(fetchDogs(user));

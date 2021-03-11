@@ -9,71 +9,79 @@ const BehaviorDietary = ({hidden, onClick, onChange}) => {
 
     return(
         <div className={hidden ? styles.hide : styles.container}>
-            <div>
-                <DogPlaceHolder 
-                    diameter={88}
-                    svgTop={21}
-                    svgLeft={18}
-                    svgHeight={45.69}
-                    svgWidth={52.26}
-                />
-                <Typography variant="body2" className={styles.smallName}>
-                    Fido
-                </Typography>
-            </div>
-            <div>
-                <Typography variant="h4" className={styles.info}>
-                    Behavioral
-                </Typography>
-                <div>
-                    {behaviors.map(behavior => {
-                        return(
-                            <div>
-                                <Typography>
-                                    behavior
-                                </Typography>
-                            </div>
-                        )
-                    })}
+            <div className={styles.inputs}>
+                    <div>
+                        <DogPlaceHolder 
+                            diameter={88}
+                            svgTop={21}
+                            svgLeft={18}
+                            svgHeight={45.69}
+                            svgWidth={52.26}
+                        />
+                        <Typography variant="body2" className={styles.smallName}>
+                            Fido
+                        </Typography>
+                    </div>
+                    <div>
+                    <Typography variant="h4" className={styles.info}>
+                        Behavioral
+                    </Typography>
+                    <div>
+                        {behaviors.map(behavior => {
+                            return(
+                                <div
+                                    onClick={(event) => onChange(event, behavior, 'behavior')}
+                                    className={styles.behaviors}    
+                                >
+                                    <Typography>
+                                        {behavior}
+                                    </Typography>
+                                </div>
+                            )
+                        })}
+                    </div>
                 </div>
-            </div>
-            <div>
-                <Typography variant="h4" className={styles.info}>
-                    Dietary & Digestional
-                </Typography>
-                <Typography gutterBottom>
-                    Appetite
-                </Typography>
-                <Slider 
-                    defaultValue={3}
-                    aria-labelledby="discrete-slider"
-                    step={10}
-                    marks
-                    min={0}
-                    max={6}
-                />
-                <Typography gutterBottom>
-                    Water
-                </Typography>
-                <Slider 
-                    defaultValue={3}
-                    aria-labelledby="discrete-slider"
-                    step={10}
-                    marks
-                    min={0}
-                    max={6}
-                />
-                <Typography gutterBottom>
-                    Restroom
-                </Typography>
-                <Slider 
-                    defaultValue={3}
-                    aria-labelledby="discrete-slider"
-                    step={10}
-                    marks
-                    min={0}
-                    max={6}
-                />
+                <div>
+                    <Typography variant="h4" className={styles.info}>
+                        Dietary & Digestional
+                    </Typography>
+                    <Typography gutterBottom>
+                        Appetite
+                    </Typography>
+                    <Slider 
+                        defaultValue={3}
+                        aria-labelledby="discrete-slider"
+                        step={10}
+                        marks
+                        min={0}
+                        max={6}
+                        onClick={(event, value) => onChange(event, value, 'appetite')}
+                    />
+                    <Typography gutterBottom>
+                        Water
+                    </Typography>
+                    <Slider 
+                        defaultValue={3}
+                        aria-labelledby="discrete-slider"
+                        step={10}
+                        marks
+                        min={0}
+                        max={6}
+                        onClick={(event, value) => onChange(event, value, 'water')}
+                    />
+                    <Typography gutterBottom>
+                        Restroom
+                    </Typography>
+                    <Slider 
+                        defaultValue={3}
+                        aria-labelledby="discrete-slider"
+                        step={10}
+                        marks
+                        min={0}
+                        max={6}
+                        onClick={(event, value) => onChange(event, value, 'restroom')}
+                    />
+                </div>
             </div>
             <Button
                 variant="contained"
@@ -91,11 +99,17 @@ export default BehaviorDietary;
 
 const style = makeStyles({
     container: {
+        width: '90%',
+        margin: '0 auto',
+    },
+    inputs: {
         display: 'flex',
+        height: '100%',
+        width: '100%',
         alignSelf: 'center',
         justifySelf: 'center',
-        flexDirection: 'column',
-        width: 436,
+        alignContent: 'center',
+        justifyContent: 'space-around',
     },
     info: {
         color: Colors.lightText,
@@ -112,12 +126,17 @@ const style = makeStyles({
     hide: {
         display: 'none'
     },
+    behaviors: {
+
+    },
     button: {
         backgroundColor: Colors.dark,
         color: Colors.primary,
         heigth: 56,
         width: 180,
-        alignSelf: 'center',
+        position: 'relative',
+        bottom: 100,
+        left: '38%'
     },
 })
 

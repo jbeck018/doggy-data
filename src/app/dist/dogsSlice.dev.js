@@ -19,29 +19,27 @@ var fetchDogs = (0, _toolkit.createAsyncThunk)('getDogs', function _callee(user)
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          console.log(user.id);
-          _context.next = 3;
+          _context.next = 2;
           return regeneratorRuntime.awrap(_api.supabase.from('dogs').select('*').is('user', (0, _uuid.parse)(user.id)));
 
-        case 3:
+        case 2:
           _ref = _context.sent;
           dogs = _ref.data;
           error = _ref.error;
-          console.log("Dogs: ".concat(dogs));
 
           if (!error) {
-            _context.next = 11;
+            _context.next = 9;
             break;
           }
 
           console.log("error", error);
-          _context.next = 12;
+          _context.next = 10;
           break;
 
-        case 11:
+        case 9:
           return _context.abrupt("return", dogs ? dogs : []);
 
-        case 12:
+        case 10:
         case "end":
           return _context.stop();
       }
