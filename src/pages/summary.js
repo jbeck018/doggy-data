@@ -106,19 +106,23 @@ const Summary = ({user, windowSize}) => {
 
     // Component for difference in weeks
     const ValueChange = (arr, value) => {
-        const difference = arr[0][value] - arr[1][value];
-        if (difference > 0) {
-            return(
-                <span className={styles.change}>{difference}<ArrowUpward className={styles.changeIcon}/></span>
-            )
-        } else if (difference < 0) {
-            return(
-                <span className={styles.change}>{difference}<ArrowDownward className={styles.changeIcon}/></span>
-            )
-        } else {
-            return(
-                <span className={styles.change}>0</span>
-            )
+        if (arr.length > 1){
+            const difference = arr[0][value] - arr[1][value];
+            if (difference > 0) {
+                return(
+                    <span className={styles.change}>{difference}<ArrowUpward className={styles.changeIcon}/></span>
+                )
+            } else if (difference < 0) {
+                return(
+                    <span className={styles.change}>{difference}<ArrowDownward className={styles.changeIcon}/></span>
+                )
+            } else {
+                return(
+                    <span className={styles.change}>0</span>
+                )
+            }
+        }else {
+            return null
         }
     }
 

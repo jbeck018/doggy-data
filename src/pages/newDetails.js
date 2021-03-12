@@ -8,7 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 const NewDetails = ({user, windowSize}) => {
     const styles = style();
     const history = useHistory();
-    const {dog} = useParams();
+    const {dog, name} = useParams();
     const [count, setCount] = useState(1);
     const [details, setDetails] = useState({
         date: '',
@@ -52,12 +52,14 @@ const NewDetails = ({user, windowSize}) => {
                 onChange={handleDetailsChange}
                 dates={dates}
                 windowSize={windowSize}
+                name={name}
             />
             <BehaviorDietary 
                 hidden={count === 2 ? false : true} 
                 onClick={addDetailsToDB}
                 onChange={handleDetailsChange}
                 windowSize={windowSize}
+                name={name}
             />
         </div>
     )

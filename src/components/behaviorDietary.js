@@ -3,9 +3,10 @@ import { Typography } from '@material-ui/core';
 import DogPlaceHolder from '../components/dogPlaceHolder';
 import { makeStyles } from '@material-ui/core/styles';
 import { Slider, Button } from '@material-ui/core';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import Colors from '../app/colors';
 
-const BehaviorDietary = ({hidden, onClick, onChange, windowSize}) => {
+const BehaviorDietary = ({hidden, onClick, onChange, windowSize, name}) => {
     const [activeButton, setActiveButton] = useState('')
 
     //styles: 
@@ -22,7 +23,7 @@ const BehaviorDietary = ({hidden, onClick, onChange, windowSize}) => {
             alignContent: 'center',
             justifyContent: 'space-around',
             flexWrap: 'wrap',
-            marginTop: windowSize.width < 600 ? 80 : 0,
+            marginTop: windowSize.width < 600 ? 80 : 100,
             paddingBottom: windowSize.width < 600 ? 100: 0,
         },
         fido: {
@@ -93,7 +94,11 @@ const BehaviorDietary = ({hidden, onClick, onChange, windowSize}) => {
             }
         },
         sliderExplanation: {
-            color: Colors.gray
+            color: Colors.gray,
+            textTransform: 'uppercase',
+            margin: '0 0 15px 28px',
+            fontSize: 10,
+            lineheight: 12
         },
         buttonContainer: {
             display: 'flex',
@@ -110,8 +115,82 @@ const BehaviorDietary = ({hidden, onClick, onChange, windowSize}) => {
             flexDirection: 'row',
             marginTop: windowSize.width < 600 ? 50 : 100,
         },
+        filledCircleLeft: {
+            color: Colors.lightGray,
+            paddingRight: 10
+        },
+        filledCircleRight: {
+            color: Colors.lightGray,
+            paddingLeft: 10
+        },
+        sliderContainerWithSpace: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyItems: 'space-between',
+            marginBottom: 43,
+        },
+        sliderContainer: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyItems: 'space-between',
+        },
+        slider: {
+            width: '90%',
+        }
     })
+
+        //CSS for hiding thumb in MUI Component
+        const sliderStyle = makeStyles((theme) => ({
+            thumb: {
+                color: Colors.dark,
+            }, 
+            thumbSize: {
+                height: 20,
+                width: 20,
+                marginLeft: -7,
+                marginTop: 0,
+            },
+            rail: {
+                backgroundColor: Colors.gray,
+                opacity: 1,
+                height: 1,
+                marginTop: 1
+            },
+            track: {
+                backgroundColor: Colors.gray,
+                opacity: 1,
+                height: 1,
+                marginTop: 1
+            },
+            mark: {
+                color: Colors.gray,
+                height: 5,
+                width: 5,
+                marginTop: '-1.5px',
+                marginLeft: -1,
+                borderRadius: '100%',
+                '&:active .MuiSlider-active': {
+                    color:Colors.gray
+                }
+            },
+            markActive: {
+                color: Colors.gray,
+                backgroundColor: Colors.gray,
+                opacity:1
+            },  
+            root: {
+                padding: '0 10px',
+                '@media (pointer: coarse)': {
+                    // Reach 42px touch target, about ~8mm on screen.
+                    padding: '0 0',
+                },
+                marginLeft: -3,
+                marginTop: ".5"
+            }
+        }));
+
     const styles = style();
+    const sliderStyles = sliderStyle();
 
     return(
         <div className={hidden ? styles.hide : styles.container}>
@@ -125,7 +204,7 @@ const BehaviorDietary = ({hidden, onClick, onChange, windowSize}) => {
                             svgWidth={52.26}
                         />
                         <Typography variant="body2" className={styles.smallName}>
-                            Fido
+                            {name}
                         </Typography>
                     </div>
                     <div>
@@ -155,42 +234,57 @@ const BehaviorDietary = ({hidden, onClick, onChange, windowSize}) => {
                     <Typography variant="h4" className={styles.info}>
                         Dietary & Digestional
                     </Typography>
-                    <Typography className={styles.sliderExplanation} gutterBottom>
+                    <p className={styles.sliderExplanation}>
                         Appetite
-                    </Typography>
-                    <Slider 
-                        defaultValue={3}
-                        aria-labelledby="discrete-slider"
-                        step={1}
-                        marks
-                        min={0}
-                        max={6}
-                        onChange={(event, value) => onChange(event, value, 'appetite')}
-                    />
-                    <Typography className={styles.sliderExplanation} gutterBottom>
+                    </p>
+                    <div className={styles.sliderContainerWithSpace}>
+                        <FiberManualRecordIcon className={styles.filledCircleLeft}/>
+                        <Slider 
+                            defaultValue={3}
+                            aria-labelledby="discrete-slider"
+                            step={1}
+                            marks
+                            min={0}
+                            max={6}
+                            classes={sliderStyles}
+                            onChange={(event, value) => onChange(event, value, 'appetite')}
+                        />
+                        <FiberManualRecordIcon className={styles.filledCircleRight}/>
+                    </div>
+                    <p className={styles.sliderExplanation}>
                         Water
-                    </Typography>
-                    <Slider 
-                        defaultValue={3}
-                        aria-labelledby="discrete-slider"
-                        step={1}
-                        marks
-                        min={0}
-                        max={6}
-                        onChange={(event, value) => onChange(event, value, 'water')}
-                    />
-                    <Typography className={styles.sliderExplanation} gutterBottom>
+                    </p>
+                    <div className={styles.sliderContainerWithSpace}>
+                        <FiberManualRecordIcon className={styles.filledCircleLeft}/>
+                        <Slider 
+                            defaultValue={3}
+                            aria-labelledby="discrete-slider"
+                            step={1}
+                            marks
+                            min={0}
+                            max={6}
+                            classes={sliderStyles}
+                            onChange={(event, value) => onChange(event, value, 'water')}
+                        />
+                        <FiberManualRecordIcon className={styles.filledCircleRight}/>
+                    </div>
+                    <p className={styles.sliderExplanation}>
                         Restroom
-                    </Typography>
-                    <Slider 
-                        defaultValue={3}
-                        aria-labelledby="discrete-slider"
-                        step={1}
-                        marks
-                        min={0}
-                        max={6}
-                        onChange={(event, value) => onChange(event, value, 'restroom')}
-                    />
+                    </p>
+                    <div className={styles.sliderContainer}>
+                        <FiberManualRecordIcon className={styles.filledCircleLeft}/>
+                        <Slider 
+                            defaultValue={3}
+                            aria-labelledby="discrete-slider"
+                            step={1}
+                            marks
+                            min={0}
+                            max={6}
+                            classes={sliderStyles}
+                            onChange={(event, value) => onChange(event, value, 'restroom')}
+                        />
+                        <FiberManualRecordIcon className={styles.filledCircleRight}/>
+                    </div>
                 </div>
                 <div className={styles.buttonContainer}>
                     <Button

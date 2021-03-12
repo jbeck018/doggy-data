@@ -55,7 +55,7 @@ function App() {
                     <Route exact path="/new-dog">
                         <NewDog user={user} windowSize={windowSize} fetchDogs={reFetchDogs}/>
                     </Route>
-                    <Route path="/new-details/:dog">
+                    <Route path="/new-details/:dog/:name">
                         <NewDetails user={user} windowSize={windowSize} />
                     </Route>
                     <Route path="/summary/:dog">

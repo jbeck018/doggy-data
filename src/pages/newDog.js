@@ -111,12 +111,14 @@ const NewDog = ({user, windowSize, fetchDogs}) => {
                 onChange={handleDetailsChange}
                 dates={dates}
                 windowSize={windowSize}
+                name={dog.name}
             />
             <BehaviorDietary 
                 hidden={count === 2 ? false : true} 
                 onClick={addDetailsToDB}
                 onChange={handleDetailsChange}
                 windowSize={windowSize}
+                name={dog.name}
             />
         </div>
     )

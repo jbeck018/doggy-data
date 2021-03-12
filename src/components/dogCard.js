@@ -18,7 +18,7 @@ const DogCard = ({dog}) => {
 
     const handleClick = (button) => {
         if (button === 'details') {
-            history.push(`/new-details/${dog.id}`)
+            history.push(`/new-details/${dog.id}/${dog.name}`)
         } else {
             history.push(`/summary/${dog.id}`)
         }

@@ -11,7 +11,7 @@ dayjs().format();
 var customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat);
 
-const BasicInfo = ({hidden, onClick, onChange, dates, windowSize}) => {
+const BasicInfo = ({hidden, onClick, onChange, dates, windowSize, name}) => {
     const [month, setMonth] = useState(null);
     const [day, setDay] = useState(null);
     const [year, setYear] = useState(null);
@@ -86,7 +86,50 @@ const BasicInfo = ({hidden, onClick, onChange, dates, windowSize}) => {
             marginBottom: windowSize.width < 600 ? 60 : 0,
         },
     });
+    
+    //Styling for overriding MUI defaults: 
+    const selectStyle = makeStyles((theme) => ({
+        root: {
+            "& .MuiInputLabel-outlined:not(.MuiInputLabel-shrink)": {
+                // Default transform is "translate(14px, 20px) scale(1)""
+                // This lines up the label with the initial cursor position in the input
+                // after changing its padding-left.
+                transform: "translate(34px, 20px) scale(1);"
+            }
+            },
+            inputRoot: {
+            color: Colors.primary,
+            backgroundColor: Colors.gray,
+            '&[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child': {
+                // Default left padding is 6px
+                paddingLeft: 6
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: Colors.gray,
+                borderRadius: 0
+            },
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: Colors.gray,
+                borderRadius: 0
+            },
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: Colors.gray,
+                borderRadius: 0
+            },
+            endAdornment: {
+                color: Colors.primary,
+            },
+            "& .MuiIconButton-label .MuiSvgIcon-root": {
+                color: Colors.primary
+            },
+            option: {
+                color: Colors.primary,
+            },
+            }
+    }))
+
     const styles = style();
+    const selectStyles = selectStyle();
 
     //Range function for gettings years (since we don't need 100 years for possible dogs)
     //Note these return strings since the autocomplete & dayjs both req str
@@ -115,7 +158,7 @@ const BasicInfo = ({hidden, onClick, onChange, dates, windowSize}) => {
                     svgWidth={52.26}
                 />
                 <Typography variant="body2" className={styles.smallName}>
-                    Fido
+                    {name}
                 </Typography>
                 <Typography variant="h4" className={styles.info}>
                     Basic Info
@@ -128,30 +171,30 @@ const BasicInfo = ({hidden, onClick, onChange, dates, windowSize}) => {
                         id="month"
                         options={dates.filter(item => item.days >= day)}
                         getOptionLabel={(option) => option.month}
-                        classes={{root: styles.selectRoot, endAdornment: styles.selectLabel}}
+                        classes={selectStyles}
                         className={styles.month}
                         onChange={(event,value) => {value?.month ? setMonth(value.month) : setMonth(null)}}
-                        renderInput={(params) => <TextField {...params} label="MONTH" variant="outlined" />}
+                        renderInput={(params) => <TextField {...params} variant="outlined" />}
                     />
                     <Autocomplete 
                         id="day"
                         options={days}
                         getOptionLabel={(option) => option}
-                        classes={{root: styles.selectRoot, inputRoot: styles.selectLabel}}
+                        classes={selectStyles}
                         className={styles.select}
                         onChange={(event, value) => setDay(value)}
-                        renderInput={(params) => <TextField {...params} label="DAY" variant="outlined" />}
+                        renderInput={(params) => <TextField {...params} variant="outlined" />}
                     />
                     <Autocomplete 
                         id="year"
                         options={years}
                         getOptionLabel={(option) => option}
-                        classes={{root: styles.selectRoot, inputRoot: styles.selectLabel}}
+                        classes={selectStyles}
                         className={styles.select}
                         onChange={(event, value) => {
                             setYear(value);
                         }}
-                        renderInput={(params) => <TextField {...params} label="YEAR" variant="outlined" />}
+                        renderInput={(params) => <TextField {...params} variant="outlined" />}
                     />
                 </div>
                 <Typography variant="body1" className={styles.weight}>
