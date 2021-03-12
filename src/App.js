@@ -1,58 +1,91 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import { useEffect } from "react";
+import { supabase } from "./utils/api";
+import Auth from "./pages/auth";
+import Home from "./pages/home";
+import NewDog from "./pages/newDog";
+import NewDetails from "./pages/newDetails";
+import Summary from "./pages/summary";
+import Header from "./components/header";
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route
+  } from "react-router-dom";
+import { makeStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { useSelector, useDispatch } from 'react-redux';
+import { isAuth, updateUser, userState } from './app/usersSlice';
+import { fetchDogs, dogsArray } from './app/dogsSlice';
+import useWindowSize from './utils/windowResizeHook';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
-  );
+    const dispatch = useDispatch()
+    const styles = style();
+    const user = useSelector(userState);
+    const dogs = useSelector(dogsArray)
+    const windowSize = useWindowSize();
+
+    const reFetchDogs = () => {
+        console.log('getting dogs again')
+        dispatch(fetchDogs(user));
+    }
+
+    useEffect(() => {
+        dispatch(isAuth);
+        dispatch(fetchDogs(user));
+        const { data: authListener } = supabase.auth.onAuthStateChange(
+            async (event, session) => {
+                const currentUser = session?.user;
+                dispatch(updateUser(currentUser ?? null));
+            }
+        );
+
+        return () => {
+            authListener?.unsubscribe();
+        };
+    }, [dispatch, user]);
+
+    return (
+        <MuiThemeProvider theme={THEME}>
+            <div className={styles.app}>
+                <Router>
+                    <Header user={user} windowSize={windowSize}/>
+                    <Switch>
+                        <Route exact path="/">
+                            {!user ? <Auth windowSize={windowSize} /> : <Home user={user} dogs={dogs} windowSize={windowSize}/>}
+                        </Route>
+                        <Route exact path="/new-dog">
+                            <NewDog user={user} windowSize={windowSize} fetchDogs={reFetchDogs}/>
+                        </Route>
+                        <Route path="/new-details/:dog/:name">
+                            <NewDetails user={user} windowSize={windowSize} />
+                        </Route>
+                        <Route path="/summary/:dog">
+                            <Summary user={user} windowSize={windowSize} />
+                        </Route>
+                    </Switch>
+                </Router>
+            </div>
+        </MuiThemeProvider>
+    );
 }
 
 export default App;
+
+const style = makeStyles({
+    app: {
+        display: 'flex',
+        justifyContent: 'center',
+        height: '100%',
+        width: '100%',
+    }
+});
+
+const THEME = createMuiTheme({
+    typography: {
+     "fontFamily": `"Lato"`,
+     "fontWeightLight": 300,
+     "fontWeightRegular": 400,
+     "fontWeightMedium": 500
+    }
+ });
+ 
