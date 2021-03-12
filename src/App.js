@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { supabase } from "./utils/api";
 import Auth from "./pages/auth";
 import Home from "./pages/home";
 import NewDog from "./pages/newDog";
-import Summary from './pages/summary';
+import NewDetails from "./pages/newDetails";
+import Summary from "./pages/summary";
 import Header from "./components/header";
 import {
     BrowserRouter as Router,
@@ -13,14 +14,24 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import { isAuth, updateUser, userState } from './app/usersSlice';
+import { fetchDogs, dogsArray } from './app/dogsSlice';
+import useWindowSize from './utils/windowResizeHook';
 
 function App() {
     const dispatch = useDispatch()
     const styles = style();
     const user = useSelector(userState);
+    const dogs = useSelector(dogsArray)
+    const windowSize = useWindowSize();
+
+    const reFetchDogs = () => {
+        console.log('getting dogs again')
+        dispatch(fetchDogs(user));
+    }
 
     useEffect(() => {
         dispatch(isAuth);
+        dispatch(fetchDogs(user));
         const { data: authListener } = supabase.auth.onAuthStateChange(
             async (event, session) => {
                 const currentUser = session?.user;
@@ -31,21 +42,24 @@ function App() {
         return () => {
             authListener?.unsubscribe();
         };
-    }, [dispatch]);
+    }, [dispatch, user]);
 
     return (
         <div className={styles.app}>
-            <Header user={user} />
             <Router>
+                <Header user={user} />
                 <Switch>
                     <Route exact path="/">
-                        {!user ? <Auth /> : <Home user={user} />}
+                        {!user ? <Auth windowSize={windowSize} /> : <Home user={user} dogs={dogs} windowSize={windowSize}/>}
                     </Route>
                     <Route exact path="/new-dog">
-                        <NewDog user={user} />
+                        <NewDog user={user} windowSize={windowSize} fetchDogs={reFetchDogs}/>
                     </Route>
-                    <Route path="/summary/:dogId">
-                        <Summary user={user} />
+                    <Route path="/new-details/:dog">
+                        <NewDetails user={user} windowSize={windowSize} />
+                    </Route>
+                    <Route path="/summary/:dog">
+                        <Summary user={user} windowSize={windowSize} />
                     </Route>
                 </Switch>
             </Router>

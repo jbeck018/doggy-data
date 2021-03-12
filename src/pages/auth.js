@@ -14,7 +14,7 @@ const Auth = () => {
     const [helperText, setHelperText] = useState({ error: null, text: null });
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [showLogin, setShowLogin] = useState(false);
+    const [showLogin, setShowLogin] = useState(true);
     const styles = style();
 
     const handleLogin = async (type) => {
@@ -57,10 +57,10 @@ const Auth = () => {
 
     return (
         <Container maxWidth="lg" className={styles.main}>
-            <Typography variant="h3">
+            <Typography variant="h3" className={styles.title}>
                 {showLogin ? 'Login' : 'Sign Up'}
             </Typography>
-            <Typography variant="body2" gutterBottom>
+            <Typography variant="body2" className={styles.subhead}>
                 { showLogin ? <>Need to create an account? <Link href='#' onClick={() => setShowLogin(false)}>Sign up here</Link></> : 
                 <>Already have an account? <Link href='#' onClick={() => setShowLogin(true)}>Login here.</Link></>
                 
@@ -133,10 +133,17 @@ const style = makeStyles({
         flexDirection: 'column',
         width: 500,
     },
+    title: {
+        paddingBottom: 5,
+    },
+    subhead: {
+        paddingBottom: 20,
+    },
     button: {
         backgroundColor: Colors.dark,
         color: Colors.primary,
         float: 'right',
         heigth: '56px',
+        marginTop: 10,
     }
 })

@@ -3,8 +3,9 @@ import logo from '../assets/logo.svg';
 import { supabase } from "../utils/api";
 import { Button } from '@material-ui/core';
 import Colors from '../app/colors';
+import {Link} from 'react-router-dom';
 
-const Header = (props) => {
+const Header = ({user}) => {
     const styles = style();
     
     const handleLogout = async () => {
@@ -13,8 +14,10 @@ const Header = (props) => {
 
     return(
         <header className={styles.header}>
-            <img src={logo} alt="Logo" className={styles.logo} />
-            {props.user ? (
+            <Link to="/" className={styles.link}>
+                <img src={logo} alt="Logo" className={styles.logo} />
+            </Link>
+            {user ? (
                 <Button
                     onClick={handleLogout}
                     className={styles.button}
@@ -44,6 +47,11 @@ const style = makeStyles({
         color: Colors.dark,
         height: '12.05px',
         float: 'right',
-        padding: 30
-    }
+        padding: '35px 30px 35px 10px'
+    },
+    link: {
+        textDecoration: 'none',
+        width: '157px',
+        height: '12.05px'
+    },
 })

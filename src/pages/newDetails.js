@@ -1,21 +1,15 @@
 import { useState } from "react";
 import { supabase } from "../utils/api";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import BasicInfo from '../components/basicInfo';
-import Profile from '../components/profile';
 import BehaviorDietary from '../components/behaviorDietary';
 import { makeStyles } from '@material-ui/core/styles';
 
-const NewDog = ({user, windowSize, fetchDogs}) => {
+const NewDetails = ({user, windowSize}) => {
     const styles = style();
     const history = useHistory();
-    const [count, setCount] = useState(0);
-    const [submitDogReturn, setSubmitDogReturn] = useState('');
-    const [dog, setDog] = useState({
-        name: '',
-        breed: '',
-        birthdate: ''
-    });
+    const {dog} = useParams();
+    const [count, setCount] = useState(1);
     const [details, setDetails] = useState({
         date: '',
         weight: 0,
@@ -24,15 +18,6 @@ const NewDog = ({user, windowSize, fetchDogs}) => {
         water: 3,
         restroom: 3
     });
-
-    const handleDogChange = (event, value, state) => {
-        event.preventDefault()
-        // console.log(event.target.value)
-        setDog({
-            ...dog,
-            [state]: value
-        })
-    }
 
     const handleDetailsChange = (event, value, state) => {
         event.preventDefault()
@@ -46,40 +31,21 @@ const NewDog = ({user, windowSize, fetchDogs}) => {
         setCount(count + 1)
     }
 
-    const addDogToDB = async () => {
-        const { data: newDog, error } = await supabase
-            .from('dogs')
-            .insert([{...dog, user: user.id}])
-        if (error) console.log("error", error);
-        else { 
-            setSubmitDogReturn(newDog);
-            handleClick(); 
-            fetchDogs();
-            console.log(newDog);
-        };
-    }
-
     const addDetailsToDB = async(event) => {
         event.preventDefault();
-        const { data: response, error } = await supabase
+        console.log( dog )
+        const { data, error } = await supabase
             .from('dog-details')
-            .insert([{...details, dog: submitDogReturn[0].id}])
+            .insert([{...details, dog: dog}])
         if (error) console.log("error", error);
         else {
-            console.log(response);
-            history.push('/')
+            console.log(data);
+            history.push('/');
         }
     }
 
     return(
         <div className={styles.view} >
-            <Profile 
-                hidden={count === 0 ? false : true} 
-                onClick={addDogToDB}
-                onChange={handleDogChange}
-                dates={dates}
-                windowSize={windowSize}
-            />
             <BasicInfo 
                 hidden={count === 1 ? false : true} 
                 onClick={handleClick}
@@ -97,7 +63,7 @@ const NewDog = ({user, windowSize, fetchDogs}) => {
     )
 }
 
-export default NewDog;
+export default NewDetails;
 
 const style = makeStyles({
     view: {

@@ -1,30 +1,77 @@
-import { useEffect } from "react";
-// import { supabase } from "../utils/api";
-// import ResetPassword from "../components/resetPassword";
 import { Container, Typography, Button } from '@material-ui/core';
 import DogPlaceHolder from '../components/dogPlaceHolder';
 import { makeStyles } from '@material-ui/core/styles';
 import Colors from '../app/colors';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchDogs, dogsArray } from '../app/dogsSlice';
 import { Link } from 'react-router-dom';
+import DogList from '../components/dogList';
+import {Fab} from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+import { useHistory } from "react-router-dom";
 
-const Home = ({ user }) => {
-    // const [todos, setTodos] = useState([]);
-    // const newTaskTextRef = useRef();
+const Home = ({ user, dogs, windowSize }) => {
+    const history = useHistory();
+
+    //Styling for the component
+    const style = makeStyles((theme) => ({
+        home: {
+            display: 'flex',
+            marginTop: 90,
+            flexDirection: 'column',
+            width: windowSize.width < 600? '100%' : '80%',
+        },
+        summary: {
+            width: '100%',
+            display: 'flex',
+            flexWrap: 'wrap',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            marginTop: 20,
+        },
+        text: {
+            textAlign: 'center',
+            color: Colors.lightText,
+            paddingTop: 38,
+            paddingBottom: 38
+        },
+        button: {
+            backgroundColor: Colors.dark,
+            color: Colors.primary,
+            heigth: 56,
+            width: 180,
+            alignSelf: 'center',
+        },
+        link: {
+            textDecoration: 'none',
+            display: 'flex',
+            flexDirection: 'column',
+            alignContent: 'center',
+        },
+        fabContainer: {
+            width: 300,
+            height: 180,
+            margin: 15,
+            display: 'flex',
+            justifyContent: 'center',
+            alignContent: 'center',
+        },
+        fab: {
+            marginTop: 15,
+            backgroundColor: Colors.dark,
+            width: windowSize.width < 600 ? 100 : 150,
+            height: windowSize.width < 600 ? 100 : 150,
+        },
+        icon: {
+            fontSize: 75,
+        }
+    }));
+
+    //create the stylesheets:
     const styles=style();
-    const dispatch = useDispatch()
-    const dogs = useSelector(dogsArray)
-
-    useEffect(() => {
-        dispatch(fetchDogs(user));
-        // fetchTodos().catch(console.error);
-    }, [dispatch, user]);
 
     return (
         <div className={styles.home}>
             <Container maxWidth="lg" className={styles.summary}> 
-                {dogs.length === 0 ? (
+                {Object.keys(dogs).length === 0 ? (
                     <Link
                         to={`/new-dog`}
                         className={styles.link}
@@ -48,49 +95,23 @@ const Home = ({ user }) => {
                         </Button>
                     </Link>
                 ) : (
-                    <h2>Things will go here</h2>
+                    <>
+                        <DogList dogs={dogs} />
+                        <div className={styles.fabContainer}>
+                            {Object.keys(dogs).length === 0 ? null : (
+                                <Fab color="primary" 
+                                    className={styles.fab}
+                                    onClick={() => {history.push('/new-dog')}}
+                                >
+                                    <AddIcon className={styles.icon} />
+                                </Fab>
+                            )}
+                        </div>
+                    </>
                 )}
             </Container>
-            {/* Add Dog button will go here */}
         </div>
     );
 };
 
 export default Home;
-
-const style=makeStyles({
-    home: {
-        display: 'flex',
-        alignSelf: 'center',
-        justifySelf: 'center',
-        flexDirection: 'column',
-        width: 500,
-    },
-    summary: {
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        alignSelf: 'center',
-        justifySelf: 'center',
-        flexDirection: 'column',
-    },
-    text: {
-        textAlign: 'center',
-        color: Colors.lightText,
-        paddingTop: 38,
-        paddingBottom: 38
-    },
-    button: {
-        backgroundColor: Colors.dark,
-        color: Colors.primary,
-        heigth: 56,
-        width: 180,
-        alignSelf: 'center',
-    },
-    link: {
-        textDecoration: 'none',
-        display: 'flex',
-        flexDirection: 'column',
-        alignContent: 'center',
-    },
-})

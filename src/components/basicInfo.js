@@ -11,11 +11,82 @@ dayjs().format();
 var customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat);
 
-const BasicInfo = ({hidden, onClick, onChange, dates}) => {
-    const styles = style();
+const BasicInfo = ({hidden, onClick, onChange, dates, windowSize}) => {
     const [month, setMonth] = useState(null);
     const [day, setDay] = useState(null);
-    const [year, setYear] = useState(null)
+    const [year, setYear] = useState(null);
+
+    //styles:
+    const style = makeStyles({
+        container: {
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+            paddingBottom: windowSize.width < 600 ? 100 : 0,
+            paddingTop: windowSize.width < 600 ? 275 : 0,
+            alignSelf: 'center',
+            justifySelf: 'center',
+            alignContent: 'center',
+        },
+        inputs: {
+            display: 'flex',
+            flexDirection: 'column',
+            width: windowSize.width < 600 ? '87.5%' : 436,
+            alignSelf: 'center',
+            justifySelf: 'center',
+            alignContent: 'center',
+            marginTop: windowSize.width < 600 ? 80 : 0,
+        },
+        info: {
+            color: Colors.lightText,
+            paddingBottom: windowSize.width < 600 ? 15 : 46,
+            fontSize: 35,
+        },
+        smallName: {
+            color: Colors.lightText,
+            textAlign: 'center',
+            fontSize: 16,
+            paddingBottom: windowSize.width < 600 ? 15 : 53,
+            textTransform: 'uppercase',
+        },
+        hide: {
+            display: 'none'
+        },
+        button: {
+            backgroundColor: Colors.dark,
+            color: Colors.primary,
+            heigth: 56,
+            width: 180,
+            marginTop: windowSize.width < 600 ? 50 : 100,
+            alignSelf: 'center',
+        },
+        date:{
+            paddingBottom: 19,
+            color: Colors.gray,
+        },
+        weight:{
+            paddingBottom: windowSize.width < 600 ? 8.5 : 19,
+            paddingTop: 30,
+            color: Colors.gray,
+        },
+        stacked: {
+            display: 'flex',
+            flexDirection: windowSize.width < 600 ? 'column' : 'row',
+            marginBottom: windowSize.width < 600 ? 0 : 50,
+        },
+        month: {
+            width: windowSize.width < 600 ? '100%' : 151,
+            height: windowSize.width < 600 ? 10 : 30,
+            marginBottom: windowSize.width < 600 ? 60 : 0,
+        },
+        select: {
+            width: windowSize.width < 600 ? '100%' :  134,
+            height: windowSize.width < 600 ? 10 : 30,
+            marginLeft: windowSize.width < 600 ? 0 : 8,
+            marginBottom: windowSize.width < 600 ? 60 : 0,
+        },
+    });
+    const styles = style();
 
     //Range function for gettings years (since we don't need 100 years for possible dogs)
     //Note these return strings since the autocomplete & dayjs both req str
@@ -83,9 +154,12 @@ const BasicInfo = ({hidden, onClick, onChange, dates}) => {
                         renderInput={(params) => <TextField {...params} label="YEAR" variant="outlined" />}
                     />
                 </div>
+                <Typography variant="body1" className={styles.weight}>
+                    WEIGHT
+                </Typography>
                 <TextField 
                     id="weight"
-                    label="WEIGHT" 
+                    label="" 
                     type="weight"
                     name="weight"
                     onChange={event => {
@@ -111,61 +185,3 @@ const BasicInfo = ({hidden, onClick, onChange, dates}) => {
 
 export default BasicInfo;
 
-const style = makeStyles({
-    container: {
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        width: '100%',
-        alignSelf: 'center',
-        justifySelf: 'center',
-        alignContent: 'center',
-        justifyContent: 'space-around',
-    },
-    inputs: {
-        display: 'flex',
-        flexDirection: 'column',
-        width: 436,
-        alignSelf: 'center',
-        justifySelf: 'center',
-        alignContent: 'center',
-        justifyContent: 'space-around',
-    },
-    info: {
-        color: Colors.lightText,
-        paddingBottom: 46,
-        size: 35,
-    },
-    smallName: {
-        color: Colors.lightText,
-        textAlign: 'center',
-        size: 16,
-        paddingBottom: 53,
-        textTransform: 'uppercase',
-    },
-    hide: {
-        display: 'none'
-    },
-    button: {
-        backgroundColor: Colors.dark,
-        color: Colors.primary,
-        heigth: 56,
-        width: 180,
-        marginTop: 100
-    },
-    date:{
-        paddingBottom: 19,
-        color: Colors.gray,
-    },
-    stacked: {
-        display: 'flex',
-        flexDirection: 'row'
-    },
-    month: {
-        width: 151,
-    },
-    select: {
-        width: 134,
-        marginLeft: 8,
-    },
-})

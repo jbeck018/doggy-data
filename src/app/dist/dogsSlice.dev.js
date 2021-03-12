@@ -9,8 +9,6 @@ var _toolkit = require("@reduxjs/toolkit");
 
 var _api = require("../utils/api");
 
-var _uuid = require("uuid");
-
 //supabase call to get Dogs Array from DB
 var fetchDogs = (0, _toolkit.createAsyncThunk)('getDogs', function _callee(user) {
   var _ref, dogs, error;
@@ -20,7 +18,7 @@ var fetchDogs = (0, _toolkit.createAsyncThunk)('getDogs', function _callee(user)
       switch (_context.prev = _context.next) {
         case 0:
           _context.next = 2;
-          return regeneratorRuntime.awrap(_api.supabase.from('dogs').select('*').is('user', (0, _uuid.parse)(user.id)));
+          return regeneratorRuntime.awrap(_api.supabase.from('dogs').select('*').eq('user', user.id));
 
         case 2:
           _ref = _context.sent;

@@ -11,14 +11,122 @@ dayjs().format();
 var customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat);
 
-const Profile = ({hidden, onClick, onChange, dates}) => {
-    const styles = style();
+const Profile = ({hidden, onClick, onChange, dates, windowSize}) => {
     const [month, setMonth] = useState(null);
     const [day, setDay] = useState(null);
     const [year, setYear] = useState(null)
     const [name, setName] = useState('Name');
     const [breed, setBreed] = useState('Breed');
     const [age, setAge] = useState('Age')
+
+    //Styles:
+    const style = makeStyles({
+        container: {
+            width: '90%',
+            margin: '0 auto',
+        },
+        inputs: {
+            display: 'flex',
+            paddingTop: 155,
+            width: windowSize.width < 876 ? '87.5%' : '100%',
+            alignSelf: 'center',
+            justifySelf: 'center',
+            alignContent: 'center',
+            justifyContent: 'space-around',
+            flexWrap: 'wrap',
+            paddingBottom: windowSize.width < 876 ? 100:0,
+        },
+        title: {
+            color: Colors.lightText,
+            paddingBottom: windowSize.width < 876 ? 40:60,
+            fontSize: 35,
+            alignSelf: 'flexStart'
+        },
+        smallName: {
+            color: Colors.lightText,
+            textAlign: 'center',
+            fontSize: 20,
+            paddingBottom: 16
+        },
+        smallNameUpper: {
+            color: Colors.lightText,
+            textAlign: 'center',
+            fontSize: 24,
+            textTransform: 'uppercase',
+            paddingBottom: 16,
+            paddingTop: 49
+        },
+        hide: {
+            display: 'none'
+        },
+        button: {
+            backgroundColor: Colors.dark,
+            color: Colors.primary,
+            heigth: 56,
+            width: 180,
+            flexDirection: 'row',
+            marginTop: windowSize.width < 876 ? 50 : 25
+        },
+        textField: {
+            color: Colors.primary,
+            paddingBottom: windowSize.width < 876 ? 40:80,
+            width: windowSize.width ? '100%' : 520
+        },
+        textFieldRoot: {
+            color: Colors.gray,
+        },
+        left: {
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignContent: 'center',
+            alignItems: 'center',
+            width: windowSize.width < 876 ? '100%':'70%'
+        },
+        right: {
+            display: 'flex',
+            flexDirection: 'column',
+            alignContent: 'center',
+            justifyContent: 'center',
+            width: windowSize.width < 876 ? '100%':'30%',
+            marginTop: windowSize.width < 876 ? 40:0,
+        },
+        centered: {
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignContent: 'center',
+        },
+        birthdate:{
+            paddingBottom: 19,
+            color: Colors.gray,
+        },
+        selectRoot: {
+            color: Colors.dark,
+            border: 'none',
+        },
+        selectLabel: {
+            color: Colors.dark
+        },
+        stacked: {
+            display: 'flex',
+            flexDirection: windowSize.width < 600 ? 'column' : 'row',
+            marginBottom: windowSize.width < 600 ? 0 : 50,
+        },
+        month: {
+            width: windowSize.width < 600 ? '100%' : 151,
+            height: windowSize.width < 600 ? 10 : 30,
+            marginBottom: windowSize.width < 600 ? 60 : 0,
+        },
+        select: {
+            width: windowSize.width < 600 ? '100%' :  134,
+            height: windowSize.width < 600 ? 10 : 30,
+            marginLeft: windowSize.width < 600 ? 0 : 8,
+            marginBottom: windowSize.width < 600 ? 60 : 0,
+        },
+    })
+
+    const styles = style();
 
     //Range function for gettings years (since we don't need 100 years for possible dogs)
     //Note these return strings since the autocomplete & dayjs both req str
@@ -41,7 +149,14 @@ const Profile = ({hidden, onClick, onChange, dates}) => {
         if (day && month) {
             const now=dayjs();
             const ageInYears = now.diff(createBirthDate(value), 'year')
-            console.log(ageInYears)
+            if (ageInYears === 1){
+                setAge('1 year old')
+            }else if (ageInYears > 1) {
+                setAge(`${ageInYears} years old`) 
+            }else{
+                const ageInMonths = now.diff(createBirthDate(value), 'month')
+                setAge(`${ageInMonths} months old`);
+            }
         }
     }
 
@@ -106,6 +221,7 @@ const Profile = ({hidden, onClick, onChange, dates}) => {
                                 classes={{root: styles.selectRoot, inputRoot: styles.selectLabel}}
                                 className={styles.select}
                                 onChange={(event, value) => {
+                                    onChange(event, createBirthDate(year), 'birthdate');
                                     setYear(value);
                                     getAge(value);
                                 }}
@@ -137,7 +253,6 @@ const Profile = ({hidden, onClick, onChange, dates}) => {
                     size="large"
                     className={styles.button}
                     onClick={(event) => {
-                        onChange(event, createBirthDate(year), 'birthdate');
                         onClick()
                     }}
                 >
@@ -149,103 +264,3 @@ const Profile = ({hidden, onClick, onChange, dates}) => {
 }
 
 export default Profile;
-
-const style = makeStyles({
-    container: {
-        width: '90%',
-        margin: '0 auto',
-    },
-    inputs: {
-        display: 'flex',
-        height: '100%',
-        width: '100%',
-        alignSelf: 'center',
-        justifySelf: 'center',
-        alignContent: 'center',
-        justifyContent: 'space-around',
-        flexWrap: 'wrap'
-    },
-    title: {
-        color: Colors.lightText,
-        paddingBottom: 80,
-        size: 35,
-        alignSelf: 'flexStart'
-    },
-    smallName: {
-        color: Colors.lightText,
-        textAlign: 'center',
-        size: 20,
-        paddingBottom: 16
-    },
-    smallNameUpper: {
-        color: Colors.lightText,
-        textAlign: 'center',
-        size: 24,
-        textTransform: 'uppercase',
-        paddingBottom: 16,
-        paddingTop: 49
-    },
-    hide: {
-        display: 'none'
-    },
-    button: {
-        backgroundColor: Colors.dark,
-        color: Colors.primary,
-        heigth: 56,
-        width: 180,
-        flexDirection: 'row',
-        marginTop: 100
-    },
-    textField: {
-        color: Colors.primary,
-        paddingBottom: 80,
-        width: 520
-    },
-    textFieldRoot: {
-        color: Colors.gray,
-    },
-    left: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignContent: 'center',
-        alignItems: 'center',
-        width: '70%'
-    },
-    centered: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignContent: 'center',
-    },
-    birthdate:{
-        paddingBottom: 19,
-        color: Colors.gray,
-    },
-    month: {
-        width: 180,
-    },
-    select: {
-        width: 160,
-        marginLeft: 10,
-    },
-    selectRoot: {
-        backgroundColor: Colors.gray,
-        color: Colors.primary,
-        border: 'none',
-    },
-    selectLabel: {
-        color: Colors.primary
-    },
-    right: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignContent: 'center',
-        justifyContent: 'center',
-        width: '30%',
-    },
-    stacked: {
-        display: 'flex',
-        flexDirection: 'row'
-    }
-})
