@@ -10,6 +10,7 @@ import { Container,
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory, useParams } from "react-router-dom";
 import Colors from '../app/colors';
+import {ArrowDownward, ArrowUpward} from '@material-ui/icons';
 import dayjs from 'dayjs';
 dayjs().format();
 var customParseFormat = require('dayjs/plugin/customParseFormat')
@@ -67,6 +68,13 @@ const Summary = ({user, windowSize}) => {
             heigth: '56px',
             marginTop: 10,
             width: 150
+        },
+        change: {
+            fontSize: 20,
+            color: Colors.secondary
+        },
+        changeIcon: {
+            fontSize: 15,
         }
     })
     const styles = style();
@@ -86,11 +94,38 @@ const Summary = ({user, windowSize}) => {
         }
     };
 
+    //reducer for getting most common behavior
+    const getWordCount = (arr) => {
+        const byCount = arr.reduce((prev, nxt) => {
+          prev[nxt.behavioral] = (prev[nxt.behavioral] + 1) || 1;
+          return prev;
+        }, {});
+
+        return Object.keys(byCount).reduce(function(a, b){ return byCount[a] > byCount[b] ? a : b });
+      }
+
+    // Component for difference in weeks
+    const ValueChange = (arr, value) => {
+        const difference = arr[0][value] - arr[1][value];
+        if (difference > 0) {
+            return(
+                <span className={styles.change}>{difference}<ArrowUpward className={styles.changeIcon}/></span>
+            )
+        } else if (difference < 0) {
+            return(
+                <span className={styles.change}>{difference}<ArrowDownward className={styles.changeIcon}/></span>
+            )
+        } else {
+            return(
+                <span className={styles.change}>0</span>
+            )
+        }
+    }
+
     useEffect(() => {
         if (details.length === 0) getDetails(dog);
     }, [dog, details]);
 
-    console.log(details)
     return (
         <div className={styles.home}>
             <Container maxWidth="lg" className={styles.summary}> 
@@ -111,17 +146,17 @@ const Summary = ({user, windowSize}) => {
                                 />
                                 <CardContent className={styles.main}>
                                     <Typography variant="h4" align="center" className={styles.name}>
-                                        {details[0].weight} ({details[0].weight - details[1].weight})
+                                        {details[0].weight} {ValueChange(details, 'weight')}
                                     </Typography>
                                 </CardContent>
                             </Card>
                             <Card className={styles.card}>
                                 <CardHeader
-                                    subheader="LATEST BEHAVIOR"
+                                    subheader="Typical Behavior"
                                 />
                                 <CardContent className={styles.main}>
                                     <Typography variant="h4" align="center" className={styles.name}>
-                                        {details[0].behavioral}
+                                        {getWordCount(details)}
                                     </Typography>
                                 </CardContent>
                             </Card>
@@ -131,7 +166,7 @@ const Summary = ({user, windowSize}) => {
                                 />
                                 <CardContent className={styles.main}>
                                     <Typography variant="h4" align="center" className={styles.name}>
-                                        {details[0].appetite} ({details[0].appetite - details[1].appetite})
+                                        {details[0].appetite} {ValueChange(details, 'appetite')}
                                     </Typography>
                                 </CardContent>
                             </Card>
@@ -141,7 +176,7 @@ const Summary = ({user, windowSize}) => {
                                 />
                                 <CardContent className={styles.main}>
                                     <Typography variant="h4" align="center" className={styles.name}>
-                                        {details[0].water} ({details[0].water - details[1].water})
+                                        {details[0].water} {ValueChange(details, 'water')}
                                     </Typography>
                                 </CardContent>
                             </Card>
@@ -151,7 +186,7 @@ const Summary = ({user, windowSize}) => {
                                 />
                                 <CardContent className={styles.main}>
                                     <Typography variant="h4" align="center" className={styles.name}>
-                                        {details[0].restroom} ({details[0].restroom - details[1].restroom})
+                                        {details[0].restroom} {ValueChange(details, 'restroom')}
                                     </Typography>
                                 </CardContent>
                             </Card>

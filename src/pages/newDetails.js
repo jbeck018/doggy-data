@@ -33,7 +33,7 @@ const NewDetails = ({user, windowSize}) => {
 
     const addDetailsToDB = async(event) => {
         event.preventDefault();
-        console.log( dog )
+        // console.log( dog )
         const { data, error } = await supabase
             .from('dog-details')
             .insert([{...details, dog: dog}])

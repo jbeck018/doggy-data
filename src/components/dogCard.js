@@ -16,22 +16,6 @@ const DogCard = ({dog}) => {
     const styles = style();
     const history = useHistory();
 
-    console.log(dog.birthdate)
-
-    //handle for getting age of dog.
-    // const getAge = (value) => {
-    //     const now=dayjs();
-    //     const ageInYears = now.diff(createBirthDate(value), 'year')
-    //     if (ageInYears === 1){
-    //         return '1 year old'
-    //     }else if (ageInYears > 1) {
-    //         return `${ageInYears} years old` 
-    //     }else{
-    //         const ageInMonths = now.diff(createBirthDate(value), 'month')
-    //         return `${ageInMonths} months old`
-    //     }
-    // }
-
     const handleClick = (button) => {
         if (button === 'details') {
             history.push(`/new-details/${dog.id}`)

@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect, useCallback} from 'react';
 import { Typography } from '@material-ui/core';
 import DogPlaceHolder from '../components/dogPlaceHolder';
 import { makeStyles } from '@material-ui/core/styles';
@@ -11,7 +11,7 @@ dayjs().format();
 var customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat);
 
-const Profile = ({hidden, onClick, onChange, dates, windowSize}) => {
+const Profile = ({hidden, onClick, onChange, onBirthdayChange, dates, windowSize}) => {
     const [month, setMonth] = useState(null);
     const [day, setDay] = useState(null);
     const [year, setYear] = useState(null)
@@ -139,26 +139,34 @@ const Profile = ({hidden, onClick, onChange, dates, windowSize}) => {
     const years = range(dayjs().year() - 25, dayjs().year());
 
     //handle for creating birthday datetime object
-    const createBirthDate = (year) => {
+    const createBirthDate = useCallback(() => {
         const date = dayjs(`${month} ${day}, ${year}`, 'MMMM D, YYYY')
         return date
-    }
+    }, [month,day,year])
 
-    //handler for calculating age of dog
-    const getAge = (value) => {
-        if (day && month) {
-            const now=dayjs();
-            const ageInYears = now.diff(createBirthDate(value), 'year')
-            if (ageInYears === 1){
-                setAge('1 year old')
-            }else if (ageInYears > 1) {
-                setAge(`${ageInYears} years old`) 
-            }else{
-                const ageInMonths = now.diff(createBirthDate(value), 'month')
-                setAge(`${ageInMonths} months old`);
+    //useEffect to update the age field when dates are changed in state
+    useEffect(() => {
+
+        //handler for calculating age of dog
+        const getAge = () => {
+            if (day && month && year) {
+                const now=dayjs();
+                const ageInYears = now.diff(createBirthDate(), 'year')
+                if (ageInYears === 1){
+                    setAge('1 year old')
+                }else if (ageInYears > 1) {
+                    setAge(`${ageInYears} years old`) 
+                }else{
+                    const ageInMonths = now.diff(createBirthDate(), 'month')
+                    setAge(`${ageInMonths} months old`);
+                }
             }
         }
-    }
+        
+        if (month && day && year) {
+            getAge();
+        }
+    },[createBirthDate, day, month, year])
 
     return(
         <div className={hidden ? styles.hide : styles.container}>
@@ -202,7 +210,12 @@ const Profile = ({hidden, onClick, onChange, dates, windowSize}) => {
                                 getOptionLabel={(option) => option.month}
                                 classes={{root: styles.selectRoot, endAdornment: styles.selectLabel}}
                                 className={styles.month}
-                                onChange={(event,value) => {value?.month ? setMonth(value.month) : setMonth(null)}}
+                                onChange={(event,value) => {
+                                    if (value?.month) {
+                                        setMonth(value.month);
+                                        onBirthdayChange(event, value.month, 'month');
+                                    }
+                                }}
                                 renderInput={(params) => <TextField {...params} label="MONTH" variant="outlined" />}
                             />
                             <Autocomplete 
@@ -211,7 +224,10 @@ const Profile = ({hidden, onClick, onChange, dates, windowSize}) => {
                                 getOptionLabel={(option) => option}
                                 classes={{root: styles.selectRoot, inputRoot: styles.selectLabel}}
                                 className={styles.select}
-                                onChange={(event, value) => setDay(value)}
+                                onChange={(event, value) => {
+                                    setDay(value);
+                                    onBirthdayChange(event, value, 'day');
+                                }}
                                 renderInput={(params) => <TextField {...params} label="DAY" variant="outlined" />}
                             />
                             <Autocomplete 
@@ -221,9 +237,8 @@ const Profile = ({hidden, onClick, onChange, dates, windowSize}) => {
                                 classes={{root: styles.selectRoot, inputRoot: styles.selectLabel}}
                                 className={styles.select}
                                 onChange={(event, value) => {
-                                    onChange(event, createBirthDate(year), 'birthdate');
                                     setYear(value);
-                                    getAge(value);
+                                    onBirthdayChange(event, value, 'year');
                                 }}
                                 renderInput={(params) => <TextField {...params} label="YEAR" variant="outlined" />}
                             />
@@ -252,9 +267,7 @@ const Profile = ({hidden, onClick, onChange, dates, windowSize}) => {
                     variant="contained"
                     size="large"
                     className={styles.button}
-                    onClick={(event) => {
-                        onClick()
-                    }}
+                    onClick={(event) => onClick()}
                 >
                     Next
                 </Button>
