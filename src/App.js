@@ -11,7 +11,7 @@ import {
     Switch,
     Route
   } from "react-router-dom";
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import { isAuth, updateUser, userState } from './app/usersSlice';
 import { fetchDogs, dogsArray } from './app/dogsSlice';
@@ -45,25 +45,27 @@ function App() {
     }, [dispatch, user]);
 
     return (
-        <div className={styles.app}>
-            <Router>
-                <Header user={user} windowSize={windowSize}/>
-                <Switch>
-                    <Route exact path="/">
-                        {!user ? <Auth windowSize={windowSize} /> : <Home user={user} dogs={dogs} windowSize={windowSize}/>}
-                    </Route>
-                    <Route exact path="/new-dog">
-                        <NewDog user={user} windowSize={windowSize} fetchDogs={reFetchDogs}/>
-                    </Route>
-                    <Route path="/new-details/:dog/:name">
-                        <NewDetails user={user} windowSize={windowSize} />
-                    </Route>
-                    <Route path="/summary/:dog">
-                        <Summary user={user} windowSize={windowSize} />
-                    </Route>
-                </Switch>
-            </Router>
-        </div>
+        <MuiThemeProvider theme={THEME}>
+            <div className={styles.app}>
+                <Router>
+                    <Header user={user} windowSize={windowSize}/>
+                    <Switch>
+                        <Route exact path="/">
+                            {!user ? <Auth windowSize={windowSize} /> : <Home user={user} dogs={dogs} windowSize={windowSize}/>}
+                        </Route>
+                        <Route exact path="/new-dog">
+                            <NewDog user={user} windowSize={windowSize} fetchDogs={reFetchDogs}/>
+                        </Route>
+                        <Route path="/new-details/:dog/:name">
+                            <NewDetails user={user} windowSize={windowSize} />
+                        </Route>
+                        <Route path="/summary/:dog">
+                            <Summary user={user} windowSize={windowSize} />
+                        </Route>
+                    </Switch>
+                </Router>
+            </div>
+        </MuiThemeProvider>
     );
 }
 
@@ -76,4 +78,14 @@ const style = makeStyles({
         height: '100%',
         width: '100%',
     }
-})
+});
+
+const THEME = createMuiTheme({
+    typography: {
+     "fontFamily": `"Lato"`,
+     "fontWeightLight": 300,
+     "fontWeightRegular": 400,
+     "fontWeightMedium": 500
+    }
+ });
+ 
