@@ -5,7 +5,33 @@ import { Button } from '@material-ui/core';
 import Colors from '../app/colors';
 import {Link} from 'react-router-dom';
 
-const Header = ({user}) => {
+const Header = ({user, windowSize}) => {
+    
+    //Styles
+    const style = makeStyles({
+        header: {
+            position: 'absolute',
+            top: 0,
+            width: '100%',
+        },
+        logo: {
+            padding: windowSize.width > 499 ? 30 : '30px 30px 30px 15px',
+            width: '157px',
+            height: '12.05px'
+        },
+        button: {
+            color: Colors.dark,
+            height: '12.05px',
+            float: 'right',
+            padding: '35px 30px 35px 10px'
+        },
+        link: {
+            textDecoration: 'none',
+            width: '157px',
+            height: '12.05px'
+        },
+    });
+
     const styles = style();
     
     const handleLogout = async () => {
@@ -31,27 +57,3 @@ const Header = ({user}) => {
 }
 
 export default Header;
-
-const style = makeStyles({
-    header: {
-        position: 'absolute',
-        top: 0,
-        width: '100%',
-    },
-    logo: {
-        padding: 30,
-        width: '157px',
-        height: '12.05px'
-    },
-    button: {
-        color: Colors.dark,
-        height: '12.05px',
-        float: 'right',
-        padding: '35px 30px 35px 10px'
-    },
-    link: {
-        textDecoration: 'none',
-        width: '157px',
-        height: '12.05px'
-    },
-})

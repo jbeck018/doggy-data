@@ -47,7 +47,7 @@ function App() {
     return (
         <div className={styles.app}>
             <Router>
-                <Header user={user} />
+                <Header user={user} windowSize={windowSize}/>
                 <Switch>
                     <Route exact path="/">
                         {!user ? <Auth windowSize={windowSize} /> : <Home user={user} dogs={dogs} windowSize={windowSize}/>}
