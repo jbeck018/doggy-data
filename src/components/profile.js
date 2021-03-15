@@ -22,13 +22,13 @@ const Profile = ({hidden, onClick, onChange, onBirthdayChange, dates, windowSize
     //Styles:
     const style = makeStyles({
         container: {
-            width: '90%',
+            width: windowSize.width < 876 ? '100%' : '90%',
             margin: '0 auto',
         },
         inputs: {
             display: 'flex',
             paddingTop: 155,
-            width: windowSize.width < 876 ? '87.5%' : '100%',
+            width: windowSize.width < 876 ? '100%' : '87.5%',
             alignSelf: 'center',
             justifySelf: 'center',
             alignContent: 'center',
